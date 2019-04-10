@@ -1,10 +1,2 @@
-/Direction.class
-/EfficientRobot.class
-/Location.class
-/Maze.class
-/RandomRobot.class
-/RightHandRuleRobot.class
-/Robot.class
-/RobotRunner.class
-/maze15a.txt
-/maze9a.txt
+/Indiv.class
+/SituationID.class
