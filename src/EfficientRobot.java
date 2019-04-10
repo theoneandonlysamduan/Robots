@@ -104,7 +104,7 @@ public class EfficientRobot extends Robot
     	
     	//initialize new location. 
     	Location target = new Location (targetX, targetY); 
-    	//Check to see if move legal. 
+    	//TODO: Check to see if move legal. 
     	if (!maze[targetX][targetY]) {
     		
     	}
