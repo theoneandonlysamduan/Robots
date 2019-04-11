@@ -53,16 +53,6 @@ public class EfficientRobot extends Robot
     }
     
     /**
-     * Overwrites the run() function from the Robot class. This is the function that is pulled up by the 
-     * runner. 
-     */
-    public void run() {
-    	//Train the robot before spitting it out. 
-    	this.train(); 
-    	
-    }
-    
-    /**
      * Moves the robot one step.
      */
     public void move(){
@@ -76,14 +66,14 @@ public class EfficientRobot extends Robot
     	boolean[][] maze = super.getMaze().getMazeGrid(); 
     	
     	//Generate the target coordinates accordingly. 
-    	switch (this.getFacingDirection()()){
-    	case Direction.NORTH: 
+    	switch (this.getFacingDirection()){
+    	case NORTH: 
     		targetX = currentX - 1; 
-    	case Direction.SOUTH: 
+    	case SOUTH: 
     		targetX = currentX + 1; 
-    	case Direction.EAST: 
+    	case EAST: 
     		targetY = currentY + 1; 
-    	case Direction.WEST: 
+    	case WEST: 
     		targetY = currentY - 1; 
     	}
     	
@@ -105,16 +95,20 @@ public class EfficientRobot extends Robot
     	Location target = new Location (targetX, targetY); 
     	//TODO: Check to see if move legal. 
     	if (!maze[targetX][targetY]) {
-    		
+    		this.EndofIteration(SituationID.HIT_WALL);
+    	}else {
+    		super.setCurrentLocation(target);
     	}
-    	
     }
     
     /**
      * Trains the robot. 
      */
     private void train() {
-    	
+    	//Three steps: 
+    	//1. Move about. 
+    	//2. Determine status. 
+    	//3. If end iteration, update Q table. 
     }
     
     
