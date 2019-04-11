@@ -1,4 +1,4 @@
-import java.util.ArrayList;
+import java.util.Random;
 
 /**
  * EfficientRobot is a subclass of Robot.
@@ -18,6 +18,8 @@ public class EfficientRobot extends Robot
 	int[][] qGrid; 				//Replica of maze grid with Q values. 
 	int[][] fitnessGrid; 		//Replica of maze grid with fitness values. 
 	
+	double epsilon; 			//Used in the epsilon greedy algorithm, represents the probability for the robot to go explore. 
+	
     /**
      * Creates a new EfficientRobot with the given maze
      * @param theMaze the maze to traverse
@@ -29,6 +31,7 @@ public class EfficientRobot extends Robot
         boolean[][] maze = theMaze.getMazeGrid(); 
         qGrid = new int [maze.length][maze[0].length];
         fitnessGrid = new int [maze.length][maze[0].length];
+        epsilon = 1; 
         
         Location exit = theMaze.getMazeExit(); 
         Location entrance = theMaze.getMazeEntrance(); 
@@ -69,12 +72,16 @@ public class EfficientRobot extends Robot
     	switch (this.getFacingDirection()){
     	case NORTH: 
     		targetX = currentX - 1; 
+    		break; 
     	case SOUTH: 
-    		targetX = currentX + 1; 
+    		targetX = currentX + 1;
+    		break; 
     	case EAST: 
     		targetY = currentY + 1; 
+    		break; 
     	case WEST: 
     		targetY = currentY - 1; 
+    		break; 
     	}
     	
     	//Check for OOB. If OOB, not move at all. 
@@ -120,6 +127,44 @@ public class EfficientRobot extends Robot
      */
     private void EndofIteration(SituationID id) {
     	
+    }
+    /**
+     * Used in epsilon greedy algorithm. 
+     * Explore: Set facing direction to a random direction. 
+     */
+    private void explore() {
+    	Random rand = new Random(); 
+    	
+    	int opt = rand.nextInt() % 4; 
+    	
+    	switch (opt) {
+    	case 0: 
+    		super.setFacingDirection(Direction.NORTH);
+    		break; 
+    	case 1: 
+    		super.setFacingDirection(Direction.SOUTH);
+    		break; 
+    	case 2: 
+    		super.setFacingDirection(Direction.EAST);
+    		break; 
+    	case 3: 
+    		super.setFacingDirection(Direction.WEST);
+    		break; 
+    	}
+    }
+    
+    /**
+     * Used in epsilon greedy algorithm. 
+     * Exploit: Set facing direction to the direction with greatest Q value. 
+     */
+    private void exploit() {
+    	
+    }
+    
+    /**
+     * Refreshes the Q-table. 
+     */
+    private void refreshQTable() {
     	
     }
 }
