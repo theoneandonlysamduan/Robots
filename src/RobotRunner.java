@@ -15,7 +15,7 @@ import java.util.Scanner;
 public class RobotRunner {
 
     private static final double WAIT_TIME = .25;
-    private static final String MAZE_FILE = "maze9e.txt";
+    private static final String MAZE_FILE = "~/Projects/Robots/maze9e.txt";
     //private static final String MAZE_FILE = "maze15a.txt";
     private static double factor;
     
