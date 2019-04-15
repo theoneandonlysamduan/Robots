@@ -21,6 +21,13 @@ public class RightHandRuleRobot extends Robot
      */
     public void move()
     {
-        
+        this.getFacingDirection();
+        switch(this.getFacingDirection()){
+        case NORTH: 
+        case SOUTH: 
+        case EAST: 
+        case WEST: 
+        default: System.out.println("Something is wrong.");
+        }
     }
 }

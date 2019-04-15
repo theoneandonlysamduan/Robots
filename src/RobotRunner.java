@@ -15,8 +15,8 @@ import java.util.Scanner;
 public class RobotRunner {
 
     private static final double WAIT_TIME = .25;
-    private static final String MAZE_FILE = "maze9e.txt";
-    //private static final String MAZE_FILE = "maze15a.txt";
+    //private static final String MAZE_FILE = "maze9a.txt";
+    private static final String MAZE_FILE = "G:\\stuff\\Robots\\src\\maze15a.txt";
     private static double factor;
     
     /**
@@ -100,7 +100,7 @@ public class RobotRunner {
      * Loads a maze from the 'mazes.dat' file provided with the program.
      * @return a new maze
      */
-    private static Maze loadMaze () {
+    private static Maze loadMaze() {
         // Attempt to load file. Failure ends in an error message.
         try {
             return new Maze(new File(MAZE_FILE));

@@ -70,7 +70,7 @@ public class Maze {
         }
         finally
         {
-            in.close();
+            if(in != null) in.close();
         }
     }
 
