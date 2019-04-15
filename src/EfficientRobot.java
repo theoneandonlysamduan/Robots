@@ -17,7 +17,6 @@ public class EfficientRobot extends Robot
 {
 	int[][] qGrid; 				//Replica of maze grid with Q values. 
 	int[][] fitnessGrid; 		//Replica of maze grid with fitness values. 
-	Indiv[] population; 
 	
     /**
      * Creates a new EfficientRobot with the given maze
