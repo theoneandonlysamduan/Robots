@@ -115,9 +115,6 @@ public class EfficientRobot extends Robot
     	Location target = new Location (targetX, targetY); 
     	//Set the location of the robot. 
     	super.setCurrentLocation(target);
-    	
-    	//Work on fitness TODO: Might not need this. 
-    	//this.fitness += this.rewardGrid[targetX][targetY]; 
     }
     
     /**
@@ -132,6 +129,10 @@ public class EfficientRobot extends Robot
     	//4. Check if end-of-iteration. 
     }
     
+    /**
+     * Checks to see if the current iteration of maze-venturing has ended. 
+     * @return whether the maze-venturing has ended. 
+     */
     private boolean ifEndOfIteration() {
     	Maze mazeMaze = super.getMaze(); 
     	boolean[][] maze = mazeMaze.getMazeGrid(); 
