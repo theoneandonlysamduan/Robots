@@ -29,5 +29,6 @@ public class RandomRobot extends Robot
         int digit;
         Random rand = new Random();
         digit = rand.nextInt(4);
+        super.setFacingDirection(dir_list[digit]);
     }
 }
