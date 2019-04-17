@@ -79,7 +79,7 @@ public abstract class Robot
      * Returns whether the robot has finished traversing the maze.
      * @return whether the robot is at the maze exit
      */
-    public final boolean isAtEnd()
+    public boolean isAtEnd()
     {
         return currentLocation.equals(maze.getMazeExit());
     }
