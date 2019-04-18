@@ -100,7 +100,7 @@ public class RobotRunner {
      * Loads a maze from the 'mazes.dat' file provided with the program.
      * @return a new maze
      */
-    private static Maze loadMaze () {
+    private static Maze loadMaze() {
         // Attempt to load file. Failure ends in an error message.
         try {
             return new Maze(new File(MAZE_FILE));

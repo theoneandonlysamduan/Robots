@@ -88,6 +88,8 @@ public class EfficientRobot extends Robot
      */
     public void move() {
     	//train() ends when end-of-training conditions are satisfied. 
+    	System.out.println("Training. . . Please wait."); 
+    	System.out.println("If taking too long, check EPSILON_REDUCTION_RATE and END_OF_TRAINING_THREASHOLD."); 
     	this.train(); 
     	
     	//Run the robot again but only exploit this time. 
