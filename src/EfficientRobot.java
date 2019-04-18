@@ -33,7 +33,7 @@ public class EfficientRobot extends Robot
 	static final double END_OF_TRAINING_EPSILON_THRESHOLD = 0.00001;//epsilon will be reduced each iteration. This is 
 																	//the threshold at which the training is considered
 																	//to be finished. 
-	static final double EPSILON_REDUCTION_RATE = 0.95; 				//The rate of reduction of epsilon. It is multiplied
+	static final double EPSILON_REDUCTION_RATE = 0.99; 				//The rate of reduction of epsilon. It is multiplied
 																	//to epsilon at each end of iteration. 
 	
     /**
@@ -173,19 +173,9 @@ public class EfficientRobot extends Robot
     		break; 
     	}
     	
-    	//Check for OOB. If OOB, not move at all. 
-    	if (targetX < 0) {
-    		targetX = 0; 
-    	}
-    	if (targetX > maze.length) {
-    		targetX = maze.length; 
-    	}
-    	if (targetY < 0) {
-    		targetY = 0; 
-    	}
-    	if (targetY > maze[0].length) {
-    		targetY = maze[0].length; 
-    	}
+    	//Check for OOB.
+    	targetX = OOBProtection(targetX, true); 
+    	targetY = OOBProtection(targetY, false); 
     	
     	//Initialize new location. 
     	Location target = new Location (targetX, targetY); 
@@ -234,6 +224,8 @@ public class EfficientRobot extends Robot
     		if (this.epsilon < END_OF_TRAINING_EPSILON_THRESHOLD) {
     			break; 
     		}
+    		
+    		printQTable(); 
     	}
     }
     
@@ -359,6 +351,7 @@ public class EfficientRobot extends Robot
     	double currentQ = qGrid[currentX][currentY][currentAction]; 
     	double maxNextQ = this.getMaxNextQ();
     	updatedQ = currentQ + trainRate * (nextReward + futureWeight * maxNextQ - currentQ); 
+    	qGrid[currentX][currentY][currentAction] = updatedQ; 
     }
     
     /**
@@ -375,6 +368,8 @@ public class EfficientRobot extends Robot
     	int targetY = 0; 
     	
     	boolean[][] maze = super.getMaze().getMazeGrid(); 
+    	
+    	int reward = 0; 
     	
     	//Generate the target coordinates accordingly. 
     	switch (this.getFacingDirection()){
@@ -393,20 +388,11 @@ public class EfficientRobot extends Robot
     	}
     	
     	//Check for OOB.
-    	if (targetX < 0) {
-    		targetX = 0; 
-    	}
-    	if (targetX > maze.length) {
-    		targetX = maze.length; 
-    	}
-    	if (targetY < 0) {
-    		targetY = 0; 
-    	}
-    	if (targetY > maze[0].length) {
-    		targetY = maze[0].length; 
-    	}
+    	targetX = OOBProtection(targetX, true); 
+    	targetY = OOBProtection(targetY, false); 
     	//Return the reward value of the target location. 
-    	return rewardGrid[targetX][targetY]; 
+    	reward = rewardGrid[targetX][targetY]; 
+    	return reward; 
     }
     
     /**
@@ -439,18 +425,8 @@ public class EfficientRobot extends Robot
     		break; 
     	}
     	//Check for OOB. 
-    	if (targetX < 0) {
-    		targetX = 0; 
-    	}
-    	if (targetX > maze.length) {
-    		targetX = maze.length; 
-    	}
-    	if (targetY < 0) {
-    		targetY = 0; 
-    	}
-    	if (targetY > maze[0].length) {
-    		targetY = maze[0].length; 
-    	}
+    	targetX = OOBProtection(targetX, true); 
+    	targetY = OOBProtection(targetY, false); 
     	
     	//At this point target coordinates is determined. Use a for loop to go through the possible actions
     	// to get the maximum Q. 
@@ -465,9 +441,9 @@ public class EfficientRobot extends Robot
     }
     
     /**
-     * Gets the action that has the max Q value. 
-     * The Q value at the current block represents all possible rewards that the robot can get in the future
-     * by taking that action, hence no need to inspect the Q values on adjacent blocks. 
+     * Gets the action that leads to the maximum Q value. 
+     * Checks the four adjacent blocks for maximum Q. 
+     * TODO: Implement this. 
      * @return an int from 0 to 3, organized in "NORTH, SOUTH, EAST, WEST."
      */
     private int getMaxQAction() {
@@ -475,75 +451,53 @@ public class EfficientRobot extends Robot
     	int currentX = currentLoc.getXCoordinate(); 
     	int currentY = currentLoc.getYCoordinate(); 
     	
-    	double maxQ   = qGrid[currentX][currentY][0]; 
-    	int maxQIndex = 0; 
-    	
-    	for (int i = 0; i < qGrid[currentX][currentY].length; i ++) {
-    		if (qGrid [currentX][currentY][i] > maxQ) {
-    			maxQ = qGrid[currentX][currentY][i]; 
-    			maxQIndex = i; 
-    		}
-    	}
-    	
-    	return maxQIndex; 
     }
+    
     /**
-     * Looks for the maximum Q value in among the adjacent blocks and returns the action the robot needs to
-     * get there. 
-     * 
-     * @retun	An int from 0 - 3, ordered in "NORTH, SOUTH, EAST, WEST". 
-     * 
+     * Prints 2-dimensional array with maximum Q values for each block on the maze. 
+     * Used for debugging. 
      */
-    /**
-    private int getMaxNextQAction() {
-    	double maxQ; 
-    	int maxQIndex = 0; 
-    	Location currentLoc = super.getCurrentLocation(); 
-    	int currentX = currentLoc.getXCoordinate(); 
-    	int currentY = currentLoc.getYCoordinate();  
+    private void printQTable() {
+    	
+    	for (int i = 0; i < qGrid.length; i ++) {
+    		for (int j = 0; j < qGrid[i].length; j ++) {
+    			double max = qGrid[i][j][0]; 
+    			for (int k = 0; k < qGrid[i][j].length; k ++) {
+    				if (max < qGrid[i][j][k]) {
+    					max = qGrid[i][j][k]; 
+    				}
+    			}
+    			System.out.printf("%.2f  ", max); 
+    		}
+    		System.out.println();
+    	}
+    	System.out.println(); 
+    	
+    }
+    
+    private int OOBProtection(int coordinate, boolean ifX) {
+    	
+    	int targetX = coordinate; 
+    	int targetY = coordinate; 
     	Maze mazeMaze = super.getMaze(); 
     	boolean[][] maze = mazeMaze.getMazeGrid(); 
     	
-    	Direction[] dirArr = new Direction[] {Direction.NORTH, Direction.SOUTH, Direction.EAST, Direction.WEST}; 
-    	Location[] adjacentLocs = new Location[] {currentLoc.getAdjacentLocationTowards(Direction.NORTH), 
-    											  currentLoc.getAdjacentLocationTowards(Direction.SOUTH), 
-    											  currentLoc.getAdjacentLocationTowards(Direction.EAST), 
-    											  currentLoc.getAdjacentLocationTowards(Direction.WEST)};
-    	//Find out which location has the maximum Q value. 
-    	//TODO: Fully implement the finding of the maxQ. 
-    	int dirIndex = 0; 
-    	for (int i = 0; i < adjacentLocs.length; i ++) {
-    		
-    		//If OOB, invalidate the location(pass the loop.)
-    		if (adjacentLocs[i].getXCoordinate() < 0) {
-    			continue; 
-    		}
-    		if (adjacentLocs[i].getXCoordinate() > maze.length) {
-    			continue; 
-    		}
-    		if (adjacentLocs[i].getYCoordinate() < 0) {
-    			continue; 
-    		}
-    		if (adjacentLocs[i].getYCoordinate() > maze[0].length) {
-    			continue; 
-    		}
-    		
-    		
+    	if (ifX) {
+    		while (targetX < 0) {
+        		targetX += 1; 
+        	}
+        	while (targetX >= maze.length) {
+        		targetX -= 1; 
+        	}
+        	return targetX; 
+    	}else {
+    		while (targetY < 0) {
+        		targetY += 1; 
+        	}
+        	while (targetY >= maze[0].length) {
+        		targetY -= 1; 
+        	}
+        	return targetY; 
     	}
-    	
-    	//At this point target coordinates is determined. Use a for loop to go through the possible actions
-    	// to get the maximum Q. 
-    	maxQ = qGrid[targetX][targetY][0]; 
-    	for (int i = 0; i < ACTIONS; i ++) {
-    		if (qGrid[targetX][targetY][i] > maxQ) {
-    			maxQ = qGrid[targetX][targetY][i]; 
-    			maxQIndex = i; 
-    		}
-    	}
-    	
-    	return maxQIndex; 
     }
-    
-    */
-    
 }
